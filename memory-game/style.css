@@ -1,0 +1,12 @@
+#game div {
+  border: 1px solid black;
+  width: 15%;
+  height: 200px;
+  margin: 10px;
+  animation-delay: 2s;
+  display: inline-block;
+}
+
+#restart-game{
+ visibility: hidden;
+}
