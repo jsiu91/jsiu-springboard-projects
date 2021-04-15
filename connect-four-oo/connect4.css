@@ -1,34 +1,40 @@
 /* game board table */
 
 #board td {
-  width: 50px;
-  height: 50px;
-  border: solid 1px #666;
+	width: 50px;
+	height: 50px;
+	border: solid 1px #666;
+}
+
+body {
+	background-color: blue;
 }
 
 /* pieces are div within game table cells: draw as colored circles */
 
 .piece {
-  margin: 5px;
-  width: 80%;
-  height: 80%;
-  border-radius: 50%;
+	margin: 5px;
+	width: 80%;
+	height: 80%;
+	border-radius: 50%;
+	animation: dropDown 1s;
 }
 
-.piece.p1 {
-  background-color: red;
+/* adding animation for the dropping */
+@keyframes dropDown {
+	0% {
+		transform: translateY(-800px);
+	}
+	100% {
+		transform: translateY(0px);
+	}
 }
-
-.piece.p2 {
-  background-color: blue;
-}
-
 /* column-top is table row of clickable areas for each column */
 
 #column-top td {
-  border: dashed 1px lightgray;
+	border: dashed 1px lightgray;
 }
 
 #column-top td:hover {
-  background-color: gold;
+	background-color: gold;
 }
