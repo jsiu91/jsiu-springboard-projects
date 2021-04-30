@@ -57,7 +57,7 @@ function showTrash () {
 /** Gets list of stories from server, generates their HTML, and puts on page. */
 
 function putStoriesOnPage () {
-	console.debug('putStoriesOnPage');
+	// console.debug('putStoriesOnPage');
 
 	$allStoriesList.empty();
 
@@ -71,7 +71,7 @@ function putStoriesOnPage () {
 }
 
 function putFavoriteStories () {
-	console.debug('putFavoriteStories');
+	// console.debug('putFavoriteStories');
 
 	$favoriteStories.empty();
 
@@ -88,7 +88,7 @@ function putFavoriteStories () {
 }
 
 function putOwnStories () {
-	console.debug('putOwnStories');
+	// console.debug('putOwnStories');
 
 	$ownStories.empty();
 
@@ -106,7 +106,7 @@ function putOwnStories () {
 
 /** Handle Submit form submission.*/
 async function submitStory (evt) {
-	console.debug('submitStory', evt);
+	// console.debug('submitStory', evt);
 	evt.preventDefault();
 
 	//grab the author, title, and url
@@ -146,7 +146,9 @@ async function addRemoveFavoriteStory (evt) {
 			$star.classList.remove('fas');
 			$star.classList.add('far');
 		}
-	} catch (e) {}
+	} catch (e) {
+		console.log(e);
+	}
 }
 
 $allStoriesList.on('click', addRemoveFavoriteStory);
