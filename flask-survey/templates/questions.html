@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block title%}Questions{% endblock %}
+
+{% block content%}
+<!-- Survey Questions -->
+<h1>{{ survey_question }}</h1>
+<!-- Flash message for invalid route -->
+{% for msg in get_flashed_messages() %}
+  <p>{{ msg }}</p>
+{% endfor %}
+
+<form action="/questions/submit" method="POST">
+    <!-- Add choices to radio buttons -->
+    {% for choice in choices %}
+    <input type="radio" id="{{choice}}" name="choice" value="{{choice}}">
+    <label for="{{choice}}">{{choice}}</label><br>
+    {% endfor %}
+    <!-- Submit form -->
+    <button>Submit</button>
+</form>
+{% endblock %}
