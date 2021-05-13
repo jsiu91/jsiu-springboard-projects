@@ -3,7 +3,7 @@
 {% block title%}Survey{% endblock %}
 
 {% block content %}
-<form action="/questions/{{id}}">
+<form action="/start" method="POST">
     <!-- Survey Title -->
     <h1>{{ prompts.title }}</h1>
     <!-- Survey Instructions  -->
