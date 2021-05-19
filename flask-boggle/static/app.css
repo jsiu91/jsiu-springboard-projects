@@ -1,0 +1,27 @@
+td {
+	font-size: 50px;
+	font-family: Helvetica, Arial;
+	padding: 20px;
+}
+
+.timer h2 {
+	text-align: left;
+	float: left;
+	padding: 20px;
+}
+
+.score h2 {
+	text-align: left;
+	float: left;
+	padding: 20px;
+}
+
+.words h2 {
+	text-align: left;
+	float: left;
+	padding: 20px;
+}
+
+.board {
+	float: left;
+}
