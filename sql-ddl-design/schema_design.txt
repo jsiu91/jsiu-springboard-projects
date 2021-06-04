@@ -1,0 +1,8 @@
+Part One: Medical Center
+https://dbdiagram.io/d/60b90bc0b29a09603d17dc6b
+
+Part Two: Craiglist
+https://dbdiagram.io/d/60b90c56b29a09603d17dc75
+
+Part Three: Soccer League
+https://dbdiagram.io/d/60b9300bb29a09603d17e063
