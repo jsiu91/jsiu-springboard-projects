@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block title %}User Edit Page{% endblock %}
+
+{% block content %}
+    <h1>Edit a user</h1>
+    <form method="POST">
+        <div class="mb-3">
+            <label for="first_name" class="form-label">First Name</label>
+            <input type="text" 
+                id="first_name" 
+                class="form-control" 
+                name="first_name" 
+                placeholder="{{user.first_name}}">
+        </div>
+        <div class="mb-3">
+            <label for="last_name" class="form-label">Last Name</label>
+            <input type="text" 
+                id="last_name" 
+                class="form-control" 
+                name="last_name" 
+                placeholder="{{user.last_name}}">
+        </div>
+        <div class="mb-3">
+            <label for="image_url" class="form-label">Image URL</label>
+            <input type="text" 
+                id="image_url" 
+                class="form-control" 
+                name="image_url" 
+                placeholder="{{user.image_url}}">
+        </div>
+        <a href="/" type="button" class="btn btn-outline-primary">Cancel</a>
+        <button class="btn btn-success">Save</button>
+    </form>
+{% endblock %}
