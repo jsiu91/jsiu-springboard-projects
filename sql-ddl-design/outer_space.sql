@@ -23,7 +23,12 @@ CREATE TABLE orbits
 CREATE TABLE galaxies
 {
   id SERIAL PRIMARY KEY,
-  moon_id INT[] REFERENCES moons,
+  moon_id INT REFERENCES moons,
+}
+CREATE TABLE galaxy_moons{
+  id SERIAL PRIMARY KEY,
+  galaxy_id INT REFERENCES galaxies,
+  moon_id INT REFERENCES moons
 }
 
 CREATE TABLE moons
