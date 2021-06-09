@@ -4,9 +4,17 @@
 
 {% block content %}
     <form action='/users/{{user.id}}/delete' method="POST">
-        <img src="{{user.image_url}}" class="rounded-0 float-sm-start" alt="profile_image">
-        <h1>{{user.first_name}} {{user.last_name}}</h1>
-        <a href="/users/{{user.id}}/edit" type="button" class="btn btn-primary">Edit</a>
-        <button class="btn btn-danger">Delete</button>
+        <img src="{{user.image_url}}" style="top: 10px; height: 15%; width: 10%; size: 50%;" class="rounded float-sm-start"alt="profile_image">
+        <h1>{{user.full_name()}}</h1>
+        <a href="/users/{{user.id}}/edit" type="button" class="btn btn-primary btn-sm">Edit</a>
+        <button class="btn btn-danger btn-sm">Delete</button>
     </form>
+
+    <h2>Posts</h2>
+    <ul>
+        {% for post in posts %}
+        <li><a href="/posts/{{post.id}}">{{post.title}}</a></li>
+        {% endfor %}
+    </ul>
+    <a href="/users/{{user.id}}/posts/new" type="button" class="btn btn-primary" >Add Post</a>
 {% endblock %}
