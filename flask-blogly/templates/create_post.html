@@ -21,6 +21,13 @@
                 rows="3">
             </textarea>
         </div>
+        <div class="mb-3">
+            {% for tag in tags %}
+            <input type="checkbox" name="check" value="{{tag.id}}">
+            <label for="check">{{tag.name}}</label>
+            <br>
+            {% endfor %}
+        </div>
         <div class="d-grid gap-2 d-md-flex justify-content-md-end">
             <a href="/" type="button" class="btn btn-primary btn-sm">Cancel</a>
             <button class="btn btn-success btn-sm">Add</button>

@@ -19,9 +19,22 @@
                 id="content" 
                 class="form-control" 
                 name="content" 
-                placeholder="{{post.content}}"
-                rows="3">
+                rows="3"
+                placeholder="{{post.content}}">
             </textarea>
+        </div>
+        <div class="mb-3">
+            {% for tag in tags %}
+                {% if tag in post.tags %}
+                    <input type="checkbox" name="check" value="{{tag.id}}" checked>
+                    <label for="check">{{tag.name}}</label>
+                    <br>
+                {% else %}
+                    <input type="checkbox" name="check" value="{{tag.id}}">
+                    <label for="check">{{tag.name}}</label>
+                    <br>
+                {% endif %}
+            {% endfor %}
         </div>
         <div class="d-grid gap-2 d-md-flex justify-content-md-end">
             <a href="/" type="button" class="btn btn-outline-primary btn-sm">Cancel</a>

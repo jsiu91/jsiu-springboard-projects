@@ -1,12 +1,20 @@
 {% extends 'base.html' %}
 
-{% block title %}{% endblock %}
+{% block title %}Post Details{% endblock %}
 
 {% block content %}
     <form action="/posts/{{post.id}}/delete" method="POST">
         <h1>{{post.title}}</h1>
         <p>{{post.content}}</p>
-        <p>By {{post.user.full_name()}}</p>
+        <p>By {{post.user.full_name()}} on {{post.create_at}}</p>
+        <div class="d-grid d-md-flex">
+            <h4>Tags:</h4>
+            <ul>
+                {% for tag in tags%}
+                <li style="list-style-type: none; display:inline;"><a href="/tags/{{tag.id}}" class="btn btn-primary btn-sm rounded-1" type="button">{{tag.name}}</a></li>
+                {% endfor %}
+            </ul>
+        </div>
         <a href="/" type="button" class="btn btn-outline-primary" >Cancel</a>
         <a href="/posts/{{post.id}}/edit" type="button" class="btn btn-primary">Edit</a>
         <button class="btn btn-danger">Delete</button>
