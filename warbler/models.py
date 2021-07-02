@@ -8,6 +8,8 @@ from flask_sqlalchemy import SQLAlchemy
 bcrypt = Bcrypt()
 db = SQLAlchemy()
 
+# Warbler Model Diagram
+# https://dbdiagram.io/d/60b9300bb29a09603d17e063
 
 class Follows(db.Model):
     """Connection of a follower <-> followed_user."""

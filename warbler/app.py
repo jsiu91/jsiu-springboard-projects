@@ -4,8 +4,8 @@ from flask import Flask, render_template, request, flash, redirect, session, g
 from flask_debugtoolbar import DebugToolbarExtension
 from sqlalchemy.exc import IntegrityError
 
-from forms import UserAddForm, LoginForm, MessageForm
-from models import db, connect_db, User, Message
+from forms import UserAddForm, LoginForm, MessageForm, UserEditForm
+from models import db, connect_db, User, Message, Follows, Likes
 
 CURR_USER_KEY = "curr_user"
 
@@ -18,12 +18,12 @@ app.config['SQLALCHEMY_DATABASE_URI'] = (
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_ECHO'] = False
-app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = True
+app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', "it's a secret")
 toolbar = DebugToolbarExtension(app)
 
 connect_db(app)
-
+db.create_all()
 
 ##############################################################################
 # User signup/login/logout
@@ -112,8 +112,9 @@ def login():
 @app.route('/logout')
 def logout():
     """Handle logout of user."""
-
-    # IMPLEMENT THIS
+    do_logout()
+    flash(f"You have successfully logout!", "success")
+    return redirect('/login')
 
 
 ##############################################################################
@@ -150,8 +151,8 @@ def users_show(user_id):
                 .order_by(Message.timestamp.desc())
                 .limit(100)
                 .all())
-    return render_template('users/show.html', user=user, messages=messages)
 
+    return render_template('users/show.html', user=user, messages=messages)
 
 @app.route('/users/<int:user_id>/following')
 def show_following(user_id):
@@ -211,8 +212,31 @@ def stop_following(follow_id):
 def profile():
     """Update profile for current user."""
 
-    # IMPLEMENT THIS
+    if not g.user:
+        flash("Access unauthorized.","danger")
+        return redirect("/")
 
+    form = UserEditForm()
+
+    if form.validate_on_submit():
+        # Validate password
+        user = User.authenticate(g.user.username,
+                                 form.password.data)
+
+        if user:
+            user.username = form.username.data
+            user.email = form.email.data
+            user.image_url =  form.image_url.data if form.image_url.data else "/static/images/default-pic.png"
+            user.header_image_url = form.header_image_url.data if form.header_image_url else "/static/images/warbler-hero.jpg"
+            user.bio = form.bio.data
+
+            db.session.commit()
+            flash("User successfully updated.", "success")
+
+        flash("Incorrect Password. Enter the correct password to update", "danger")
+        return redirect("/")
+
+    return render_template("/users/edit.html", form=form)
 
 @app.route('/users/delete', methods=["POST"])
 def delete_user():
