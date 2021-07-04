@@ -1,6 +1,7 @@
 import os
 
 from flask import Flask, render_template, request, flash, redirect, session, g
+from sqlalchemy.orm import query
 from flask_debugtoolbar import DebugToolbarExtension
 from sqlalchemy.exc import IntegrityError
 
@@ -232,9 +233,10 @@ def profile():
 
             db.session.commit()
             flash("User successfully updated.", "success")
-
-        flash("Incorrect Password. Enter the correct password to update", "danger")
-        return redirect("/")
+            return redirect("/")
+        else:
+            flash("Incorrect Password. Enter the correct password to update", "danger")
+            return redirect("/")
 
     return render_template("/users/edit.html", form=form)
 
@@ -253,6 +255,20 @@ def delete_user():
 
     return redirect("/signup")
 
+@app.route('/users/add_like/<int:message_id>', methods=["POST"])
+def add_remove_like(message_id):
+    """Add or remove like to post."""
+
+    message = Message.query.get_or_404(message_id)
+
+    if message in g.user.likes:
+        g.user.likes.remove(message)
+    else:
+        g.user.likes.append(message)
+        
+    db.session.commit()
+
+    return redirect("/")
 
 ##############################################################################
 # Messages routes:
@@ -321,8 +337,8 @@ def homepage():
                     .order_by(Message.timestamp.desc())
                     .limit(100)
                     .all())
-
-        return render_template('home.html', messages=messages)
+        user = User.query.get_or_404(g.user.id)
+        return render_template('home.html', messages=messages, user=user)
 
     else:
         return render_template('home-anon.html')
