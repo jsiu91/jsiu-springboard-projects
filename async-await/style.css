@@ -1,0 +1,15 @@
+body {
+	text-align: center;
+	background-color: black;
+}
+
+#results {
+	margin-top: 70px;
+}
+
+#results > img {
+	position: absolute;
+	left: 0;
+	right: 0;
+	margin: auto;
+}
