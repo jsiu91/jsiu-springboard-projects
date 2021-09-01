@@ -7,8 +7,6 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// app.get('/' (req, res) => {});
-
 app.get('/mean', (req, res, next) => {
 	try {
 		if (!req.query.nums) {
@@ -64,6 +62,11 @@ app.get('/mode', (req, res, next) => {
 	} catch (e) {
 		return next(e);
 	}
+});
+
+// 404 handler
+app.use((req, res) => {
+	return new ExpressError('Not Found.', 404);
 });
 
 app.listen(3000, function () {
