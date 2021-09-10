@@ -8,8 +8,8 @@ let router = new express.Router();
 // Return info on invoices: like {invoices: [{id, comp_code}, ...]}
 router.get('/', async (req, res, next) => {
 	try {
-		const compQuery = await db.query(`SELECT * FROM invoices ORDER BY id`);
-		return res.json({ invoices: compQuery.rows });
+		const invQuery = await db.query(`SELECT * FROM invoices ORDER BY id`);
+		return res.json({ invoices: invQuery.rows });
 	} catch (e) {
 		return next(e);
 	}
@@ -80,23 +80,32 @@ router.post('/', async (req, res, next) => {
 // PUT /invoices/[id]
 // Updates an invoice.
 // If invoice cannot be found, returns a 404.
-// Needs to be passed in a JSON body of {amt}
+// Needs to be passed in a JSON body of {amt, paid}
 // Returns: {invoice: {id, comp_code, amt, paid, add_date, paid_date}}
 router.put('/:id', async (req, res, next) => {
 	try {
 		const result = await db.query(
 			`UPDATE invoices
-            SET amt= $1
-            WHERE id=$2
+            SET amt= $1, paid= $2
+            WHERE id=$3
             RETURNING id, comp_code, amt, paid, add_date, paid_date`,
-			[ req.body.amt, req.params.id ]
+			[ req.body.amt, req.body.paid, req.params.id ]
 		);
 
 		if (result.rows.length === 0) {
 			throw new ExpressError(`There is no invoice with id of ${req.params.id}`, 404);
 		}
 
-		return res.json({ invoice: result.rows[0] });
+		let invoice = result.rows[0];
+
+		if ((invoice.paid = true)) {
+			invoice.paid_date = new Date();
+		} else if ((invoice.paid = false)) {
+			invoice.paid_date = null;
+		} else {
+		}
+
+		return res.json({ invoice: invoice });
 	} catch (e) {
 		return next(e);
 	}

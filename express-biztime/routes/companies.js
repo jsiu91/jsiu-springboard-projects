@@ -1,7 +1,7 @@
 const express = require('express');
 const ExpressError = require('../expressError');
+const slugify = require('slugify');
 const db = require('../db');
-const app = require('../app');
 
 let router = new express.Router();
 
@@ -20,30 +20,33 @@ router.get('/', async (req, res, next) => {
 // Return obj of company: {company: {code, name, description}}
 router.get('/:code', async (req, res, next) => {
 	try {
-		let code = req.params.code;
-
 		const compResult = await db.query(
-			`SELECT code, name, description
-               FROM companies
-               WHERE code = $1`,
-			[ code ]
+			`SELECT c.code, c.name, c.description, i.name
+                FROM companies AS c
+                    LEFT JOIN companies_industries AS ci
+                    ON c.code = ci.comp_code
+                    LEFT JOIN industries as i
+                    ON ci.ind_code = i.code
+                    WHERE c.code = $1`,
+			[ req.params.code ]
 		);
 
 		const invResult = await db.query(
 			`SELECT id
                FROM invoices
                WHERE comp_code = $1`,
-			[ code ]
+			[ req.params.code ]
 		);
 
 		if (compResult.rows.length === 0) {
-			throw new ExpressError(`There is no company with code: ${code}`, 404);
+			throw new ExpressError(`There is no company with code: ${req.params.code}`, 404);
 		}
 
 		const company = compResult.rows[0];
 		const invoices = invResult.rows;
 
 		company.invoices = invoices.map((inv) => inv.id);
+		company.industries = compResult.rows.map((r) => r.name);
 
 		return res.json({ company: company });
 	} catch (err) {
@@ -57,11 +60,14 @@ router.get('/:code', async (req, res, next) => {
 // Returns obj of new company: {company: {code, name, description}}
 router.post('/', async (req, res, next) => {
 	try {
+		let { name, description } = req.body;
+		let code = slugify(name, { lower: true });
+
 		const result = await db.query(
 			`INSERT INTO companies (code, name, description) 
                 VALUES ($1, $2, $3) 
                 RETURNING code, name, description`,
-			[ req.body.code, req.body.name, req.body.description ]
+			[ code, name, description ]
 		);
 		return res.status(201).json({ company: result.rows[0] });
 	} catch (e) {
@@ -111,7 +117,7 @@ router.delete('/:code', async (req, res, next) => {
 		]);
 
 		if (result.rows.length === 0) {
-			throw new ExpressError(`There is no company with code '${req.params.code}'`);
+			throw new ExpressError(`There is no company with code '${req.params.code}'`, 404);
 		}
 
 		return res.json({ status: 'deleted' });
