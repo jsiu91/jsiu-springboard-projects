@@ -5,30 +5,30 @@ const { SECRET_KEY } = require('../config');
 
 /** Authorization Middleware: Requires user is logged in. */
 
-function requireLogin(req, res, next) {
-  try {
-    if (req.curr_username) {
-      return next();
-    } else {
-      return next({ status: 401, message: 'Unauthorized' });
-    }
-  } catch (err) {
-    return next(err);
-  }
+function requireLogin (req, res, next) {
+	try {
+		if (req.curr_username) {
+			return next();
+		} else {
+			return next({ status: 401, message: 'Unauthorized' });
+		}
+	} catch (err) {
+		return next(err);
+	}
 }
 
 /** Authorization Middleware: Requires user is logged in and is staff. */
 
-function requireAdmin(req, res, next) {
-  try {
-    if (req.curr_admin) {
-      return next();
-    } else {
-      return next({ status: 401, message: 'Unauthorized' });
-    }
-  } catch (err) {
-    return next(err);
-  }
+function requireAdmin (req, res, next) {
+	try {
+		if (req.curr_admin) {
+			return next();
+		} else {
+			return next({ status: 401, message: 'Unauthorized. Requires admin' });
+		}
+	} catch (err) {
+		return next(err);
+	}
 }
 
 /** Authentication Middleware: put user on request
@@ -44,23 +44,30 @@ function requireAdmin(req, res, next) {
  *
  **/
 
-function authUser(req, res, next) {
-  try {
-    const token = req.body._token || req.query._token;
-    if (token) {
-      let payload = jwt.decode(token);
-      req.curr_username = payload.username;
-      req.curr_admin = payload.admin;
-    }
-    return next();
-  } catch (err) {
-    err.status = 401;
-    return next(err);
-  }
+function authUser (req, res, next) {
+	try {
+		const token = req.body._token || req.query._token;
+		// # BUG 6 - Verify if token is valid, missing SECRET_KEY
+		if (token) {
+			let payload = jwt.decode(token, SECRET_KEY);
+			if (payload) {
+				req.curr_username = payload.username;
+				req.curr_admin = payload.admin;
+				return next();
+			} else {
+				return next({ message: 'Invalid Token' });
+			}
+		} else {
+			return next({ status: 401, message: 'Provide a token' });
+		}
+	} catch (err) {
+		err.status = 401;
+		return next(err);
+	}
 } // end
 
 module.exports = {
-  requireLogin,
-  requireAdmin,
-  authUser
+	requireLogin,
+	requireAdmin,
+	authUser,
 };
