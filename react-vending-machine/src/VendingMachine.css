@@ -1,0 +1,18 @@
+.VendingMachine {
+	text-align: left;
+	justify-content: left;
+	flex-direction: column;
+	text-align: left;
+	align-items: left;
+	height: 200vh;
+	width: 100vw;
+	margin: 10%;
+	display: flex;
+	flex: 1;
+	border-radius: 10px;
+	background-size: cover;
+}
+
+.VendingMachine h2 {
+	padding: 16rem;
+}
